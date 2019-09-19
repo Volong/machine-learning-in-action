@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 from numpy import *
@@ -21,16 +21,16 @@ def classify0(inX, dataSet, labels, k):
 
     # shape用来获取数组的行与列的数量，结果为元组()
     dataSetSize = dataSet.shape[0]  # 获取行数
-    print("dataSetSize", dataSetSize)
+    # print("dataSetSize", dataSetSize)
 
     # 欧几里得距离计算两个坐标的距离
     # 构造一个与dataSet维度一样的二维数组
     n = tile(inX, (dataSetSize, 1))
-    print(n)
+    # print(n)
 
     # 进行数组运算（其实就是坐标的加减运算）
     diffMat = n - dataSet
-    print("diffMat", diffMat)
+    # print("diffMat", diffMat)
 
     # 各个点的平方
     sqDiffMat = diffMat ** 2
@@ -40,11 +40,11 @@ def classify0(inX, dataSet, labels, k):
 
     # 开根号
     distances = sqDistances ** 0.5
-    print("distances", distances)
+    # print("distances", distances)
 
     # 返回数组值从小到大所对应的下标
     sortedDistIndicies = distances.argsort()
-    print("sortedDistIndicies", sortedDistIndicies)
+    # print("sortedDistIndicies", sortedDistIndicies)
 
     classCount = {}
 
@@ -83,8 +83,47 @@ def file2matrix(filename):
         classLabelVector.append(int(listFromLine[-1]))  # -1表示数组最后一个元素
         index += 1
 
-    print(classLabelVector[0:3])
+    # print(classLabelVector[0:3])
     return returnMat, classLabelVector
+
+
+def autoNorm(dataSet):
+    minVals = dataSet.min(0)  # 返回每列的最小值
+    maxVals = dataSet.max(0)  # 返回每列的最大值
+    ranges = maxVals - minVals
+    m = dataSet.shape[0]  # 返回行数
+    normDataSet = dataSet - tile(minVals, (m, 1))
+    normDataSet = normDataSet / tile(ranges, (m, 1))
+    return normDataSet, ranges, minVals
+
+
+def datingClassTest():
+    hoRatio = 0.10
+
+    # 读取文件内容
+    datingDataMat, datingLabels = file2matrix("datingTestSet2.txt")
+
+    # 对内容进行归一化
+    normMat, ranges, minVals = autoNorm(datingDataMat)
+
+    # 获取行数
+    m = normMat.shape[0]
+
+    # 取10%的数据进行测试
+    numTestVecs = int(m * hoRatio)
+    errorCount = 0.0
+
+    for i in range(numTestVecs):
+        classifierResult = classify0(normMat[i, :],  # 第i行的数据作为测试数据
+                                     normMat[numTestVecs:m, :],  # numTestVecs到m行的数据做为样本数据
+                                     datingLabels[numTestVecs:m],  # numTestVecs到m行的标签数据
+                                     3)
+        print "分类器返回：%d，实际为：%d" % (classifierResult, datingLabels[i])
+
+        if classifierResult != datingLabels[i]:
+            errorCount += 1.0
+
+    print "总错误率为：%f" % (errorCount / float(numTestVecs))
 
 
 if __name__ == "__main__":
