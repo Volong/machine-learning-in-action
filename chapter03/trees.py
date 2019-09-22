@@ -58,4 +58,3 @@ def splitDataSet(dataSet, axis, value):
 
 def chooseBestFeatureToSplit(dataSet):
     numFeatures = len(dataSet[0]) - 1
-    
