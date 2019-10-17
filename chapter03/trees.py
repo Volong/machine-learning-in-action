@@ -4,11 +4,14 @@
 from math import log
 
 
+# 计算熵
 def calcShannonEnt(dataSet):
     numEntries = len(dataSet)
     labelCounts = {}
 
+    # 获取一行数据
     for featVec in dataSet:
+        # 获取最后一列的数据
         currentLabel = featVec[-1]
         if currentLabel not in labelCounts.keys():
             labelCounts[currentLabel] = 0
@@ -49,12 +52,18 @@ def splitDataSet(dataSet, axis, value):
         if featVec[axis] == value:
             # 保留前axis个数组元素
             reducedFeatVec = featVec[:axis]
-            # 不管数据是不是数组，直接添加到数组中，类似Java中list.add
+            # 直接添加到数组中，类似Java中list.add
             reducedFeatVec.extend(featVec[axis+1:])
             # 如果数据是数组，则数组整个放入
             retDataSet.append(reducedFeatVec)
 
     return retDataSet
 
+
 def chooseBestFeatureToSplit(dataSet):
     numFeatures = len(dataSet[0]) - 1
+
+
+arr = [1, 2, 3]
+print(arr[:0])
+

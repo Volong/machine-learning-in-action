@@ -118,12 +118,12 @@ def datingClassTest():
                                      normMat[numTestVecs:m, :],  # numTestVecs到m行的数据做为样本数据
                                      datingLabels[numTestVecs:m],  # numTestVecs到m行的标签数据
                                      3)
-        print "分类器返回：%d，实际为：%d" % (classifierResult, datingLabels[i])
+        print("分类器返回：%d，实际为：%d" % (classifierResult, datingLabels[i]))
 
         if classifierResult != datingLabels[i]:
             errorCount += 1.0
 
-    print "总错误率为：%f" % (errorCount / float(numTestVecs))
+    print("总错误率为：%f" % (errorCount / float(numTestVecs)))
 
 
 if __name__ == "__main__":
